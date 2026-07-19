@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 import config
 from connectors import CONNECTORS
-from filters import is_relevant, is_us_location
+from filters import is_relevant, is_us_location, is_within_experience_range
 from notifier import get_reaction_status, post_error, post_job
 from sheets import append_job, update_status
 from state import load_state, save_state
@@ -34,7 +34,10 @@ def run() -> None:
         except Exception as e:
             log_error(f"{c['name']} connector failed: {e}")
 
-    relevant = [j for j in all_jobs if is_relevant(j) and is_us_location(j)]
+    relevant = [
+        j for j in all_jobs
+        if is_relevant(j) and is_us_location(j) and is_within_experience_range(j)
+    ]
     new_jobs = [j for j in relevant if j.job_id not in state]
 
     for job in new_jobs:
