@@ -23,9 +23,9 @@ Create a **public** repo (e.g. `job-alert-bot`) and push this code to it. Public
 
 ### 3. Discord bot
 1. https://discord.com/developers/applications → New Application → Bot tab → Add Bot.
-2. Under **Privileged Gateway Intents**, none are required for this bot (it only posts messages and reads reactions via REST).
+2. Under **Privileged Gateway Intents**, none are required for this bot (it only posts messages and reads poll results/reactions via REST — no gateway connection).
 3. Copy the bot token → `DISCORD_BOT_TOKEN`.
-4. OAuth2 → URL Generator → scope `bot`, permissions: `Send Messages`, `Read Message History`, `Add Reactions`. Open the generated URL to invite the bot to your server.
+4. OAuth2 → URL Generator → scope `bot`, permissions: `Send Messages`, `Read Message History`, `Add Reactions`. Open the generated URL to invite the bot to your server. (Note: bots can create polls and read poll results, but cannot vote on polls via the API — voting is a human-only client action, which is exactly what this is for.)
 5. Create three text channels: `#job-alerts` (Android/Kotlin postings), `#dev-jobs` (generic software engineer/developer postings), and `#bot-errors`.
 6. Enable Developer Mode in Discord (User Settings → Advanced), right-click each channel → Copy Channel ID → `DISCORD_CHANNEL_ID`, `DEV_JOBS_CHANNEL_ID`, and `BOT_ERRORS_CHANNEL_ID`.
 
@@ -55,12 +55,19 @@ The workflow only listens for `workflow_dispatch` — there's no `schedule:` tri
 Do **not** re-add a `schedule:` trigger to the workflow alongside this — two trigger sources firing concurrently can race on the same Gist state (one run's newly-discovered job can get silently dropped if a second run reads/writes state at the same time).
 
 ## Filtering & channel routing
-Three filters combine in `main.py` — a job must pass all three to get posted (see [filters.py](filters.py)):
+Four filters combine in `main.py` — a job must pass all four to get posted (see [filters.py](filters.py)):
 - **Keyword/category** (`job_category()`): title must contain an Android keyword (`android`, `kotlin`, `jetpack compose`, `mobile developer`) — routed to `#job-alerts` — or a generic SWE keyword (`software engineer`, `software developer`, `backend engineer`, etc.) — routed to `#dev-jobs`. Android takes priority, so a title like "Software Engineer, Android" only posts once, to `#job-alerts`, not both channels.
 - **Location**: must resolve to a US location (phrase match like "United States", or a bounded 2-letter state code — extend `US_STATE_CODES` as you see real-data gaps)
 - **Experience range**: titles signaling more senior scope are excluded — `Intern`, `Staff`, `Principal`, `Distinguished`, `Lead`, `Manager`, `Director`, `Head`, `VP`. `Senior` is deliberately *not* excluded since those roles can still fall in a 2-4 year band.
+- **Freshness** (`is_recent()`): postings older than `MAX_POSTING_AGE_DAYS` (3) are discarded, so an old backlog can't crowd out fresh postings under the per-run cap (see below). Jobs with no parseable `posted_date` — currently only Google's connector, which has no date field to scrape — skip this check entirely and rely on dedup alone.
 
 Per-company `discord_channel_id` (in `companies.json`) overrides category-based routing if set.
+
+## Status tracking (Discord polls)
+Each posted job includes a native Discord poll — `Applied` / `Skipped` / `Viewed`, single-select, open for 3 days. Voting is a human-only client action; bots can create polls and read results but cannot vote via the API. Status sync (`notifier.get_job_status`) auto-detects per message: reads poll results if the message has one, otherwise falls back to a legacy emoji-reaction check (👀/✅/❌) for messages posted before polls were introduced — both formats keep working indefinitely, no migration needed.
+
+## Per-run posting cap
+`MAX_NEW_JOBS_PER_CATEGORY_PER_RUN` (20, in `main.py`) is a circuit breaker: if a single run finds more new jobs than this in one category — e.g. a newly-added company's entire backlog matching on its first run — only the first N post, and the rest stay untracked so they drip in over subsequent runs instead of flooding a channel. Combined with the freshness filter, backlog jobs are unlikely to ever reach this cap in the first place.
 
 ## Adding companies
 `companies.json` ships pre-seeded with 32 companies across Greenhouse and Ashby.
