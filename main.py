@@ -11,7 +11,14 @@ from filters import (
     sort_by_recency,
     time_ago,
 )
-from notifier import POLL_DURATION_HOURS, delete_message, get_job_status, post_error, post_job
+from notifier import (
+    POLL_DURATION_HOURS,
+    delete_message,
+    get_job_status,
+    post_archived_notice,
+    post_error,
+    post_job,
+)
 from sheets import append_job, update_status
 from state import load_state, save_state
 
@@ -95,11 +102,13 @@ def run() -> None:
                     "title": job.title,
                     "company": job.company,
                     "url": job.url,
+                    "category": category,
                     "first_seen": first_seen,
                     "discord_message_id": msg_id,
                     "discord_channel_id": channel_id,
                     "sheet_row": row,
                     "status": "new",
+                    "status_updated_at": first_seen,
                 }
                 posted += 1
             except Exception as e:
@@ -115,7 +124,18 @@ def run() -> None:
                 try:
                     first_seen = datetime.fromisoformat(record["first_seen"])
                     if datetime.now(UTC) - first_seen > POLL_EXPIRY:
+                        if config.ARCHIVED_JOBS_CHANNEL_ID:
+                            new_msg_id = post_archived_notice(
+                                record["title"], record["company"], record["url"],
+                                config.ARCHIVED_JOBS_CHANNEL_ID,
+                            )
+                            delete_message(
+                                record["discord_message_id"], record.get("discord_channel_id")
+                            )
+                            record["discord_message_id"] = new_msg_id
+                            record["discord_channel_id"] = config.ARCHIVED_JOBS_CHANNEL_ID
                         record["status"] = "archived"
+                        record["status_updated_at"] = now_iso()
                         update_status(record["sheet_row"], "archived")
                         continue
                     new_status = get_job_status(
@@ -123,6 +143,7 @@ def run() -> None:
                     )
                     if new_status and new_status != record["status"]:
                         record["status"] = new_status
+                        record["status_updated_at"] = now_iso()
                         update_status(record["sheet_row"], new_status)
                 except Exception as e:
                     log_error(f"failed to sync status for {job_id}: {e}")

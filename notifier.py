@@ -70,6 +70,23 @@ def post_job(job: Job, channel_id: str | None = None, posted_ago: str | None = N
     return r.json()["id"]
 
 
+def post_archived_notice(title: str, company: str, url: str, channel_id: str) -> str:
+    # plain message, no poll -- voting already closed by the time a job is
+    # archived, so there's nothing left to vote on.
+    r = _request_with_retry(
+        "POST",
+        f"{API_BASE}/channels/{channel_id}/messages",
+        json={
+            "content": (
+                f"**{title}** — {company}\n{url}\n"
+                f"_Archived — no response within the voting window._"
+            )
+        },
+    )
+    r.raise_for_status()
+    return r.json()["id"]
+
+
 def delete_message(message_id: str, channel_id: str | None = None) -> None:
     cid = channel_id or config.DISCORD_CHANNEL_ID
     try:

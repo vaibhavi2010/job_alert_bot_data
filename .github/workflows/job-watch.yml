@@ -23,6 +23,7 @@ jobs:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
           DEV_JOBS_CHANNEL_ID: ${{ secrets.DEV_JOBS_CHANNEL_ID }}
+          ARCHIVED_JOBS_CHANNEL_ID: ${{ secrets.ARCHIVED_JOBS_CHANNEL_ID }}
           BOT_ERRORS_CHANNEL_ID: ${{ secrets.BOT_ERRORS_CHANNEL_ID }}
           GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}

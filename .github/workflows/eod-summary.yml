@@ -1,0 +1,23 @@
+name: EOD Summary
+# Triggered externally via a separate cron-job.org entry, once daily at
+# 9 PM America/Phoenix -- deliberately a distinct workflow/trigger from
+# job-watch.yml, not piggybacked on the 15-minute runs, so the summary
+# time is exact rather than landing up to 15min late.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python eod_summary.py
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          EOD_UPDATES_CHANNEL_ID: ${{ secrets.EOD_UPDATES_CHANNEL_ID }}
