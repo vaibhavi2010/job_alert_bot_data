@@ -3,7 +3,14 @@ from datetime import UTC, datetime
 
 import config
 from connectors import CONNECTORS
-from filters import is_recent, is_us_location, is_within_experience_range, job_category, time_ago
+from filters import (
+    is_recent,
+    is_us_location,
+    is_within_experience_range,
+    job_category,
+    sort_by_recency,
+    time_ago,
+)
 from notifier import delete_message, get_job_status, post_error, post_job
 from sheets import append_job, update_status
 from state import load_state, save_state
@@ -57,6 +64,7 @@ def run() -> None:
         by_category[cat].append(j)
     capped_new_jobs = []
     for cat, jobs in by_category.items():
+        jobs = sort_by_recency(jobs)
         if len(jobs) > MAX_NEW_JOBS_PER_CATEGORY_PER_RUN:
             log_error(
                 f"{cat}: found {len(jobs)} new jobs in one run (cap is "

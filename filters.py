@@ -99,6 +99,17 @@ def time_ago(posted_date: str | None) -> str | None:
     return f"{days} day{'s' if days != 1 else ''} ago"
 
 
+def sort_by_recency(jobs: list[Job]) -> list[Job]:
+    """Newest posted_date first, so if MAX_NEW_JOBS_PER_CATEGORY_PER_RUN
+    forces a cap, the freshest postings win the slots -- directly serves
+    "notify before other applicants" instead of an arbitrary discovery
+    order. Jobs with no parseable posted_date (Google has none) sort last:
+    unknown freshness shouldn't outrank a job we can confirm is fresh."""
+    def key(job: Job) -> datetime:
+        return _parse_posted_date(job.posted_date) or datetime.min.replace(tzinfo=timezone.utc)
+    return sorted(jobs, key=key, reverse=True)
+
+
 def is_us_location(job: Job) -> bool:
     if not job.location:
         return False  # exclude if location is missing/unclear — safer default than including
