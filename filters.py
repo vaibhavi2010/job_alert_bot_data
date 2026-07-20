@@ -2,7 +2,12 @@ import re
 
 from connectors.base import Job
 
-KEYWORDS = ["android", "kotlin", "jetpack compose", "mobile developer"]
+ANDROID_KEYWORDS = ["android", "kotlin", "jetpack compose", "mobile developer"]
+SWE_KEYWORDS = [
+    "software engineer", "software developer", "backend engineer",
+    "backend developer", "full stack engineer", "full stack developer",
+    "frontend engineer", "frontend developer", "software development engineer",
+]
 
 US_PHRASES = ["united states", "usa", "u.s."]
 US_STATE_CODES = ["ca", "ny", "tx", "wa", "il", "ma", "az"]
@@ -37,9 +42,16 @@ _SENIORITY_RE = re.compile(
 )
 
 
-def is_relevant(job: Job) -> bool:
+def job_category(job: Job) -> str | None:
+    """Returns 'android', 'swe', or None. Android takes priority over the
+    broader SWE keyword set so a title like "Software Engineer, Android"
+    routes only to the Android channel, not both."""
     text = job.title.lower()
-    return any(k in text for k in KEYWORDS)
+    if any(k in text for k in ANDROID_KEYWORDS):
+        return "android"
+    if any(k in text for k in SWE_KEYWORDS):
+        return "swe"
+    return None
 
 
 def is_within_experience_range(job: Job) -> bool:

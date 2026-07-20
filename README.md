@@ -26,8 +26,8 @@ Create a **public** repo (e.g. `job-alert-bot`) and push this code to it. Public
 2. Under **Privileged Gateway Intents**, none are required for this bot (it only posts messages and reads reactions via REST).
 3. Copy the bot token → `DISCORD_BOT_TOKEN`.
 4. OAuth2 → URL Generator → scope `bot`, permissions: `Send Messages`, `Read Message History`, `Add Reactions`. Open the generated URL to invite the bot to your server.
-5. Create two text channels: `#job-alerts` and `#bot-errors`.
-6. Enable Developer Mode in Discord (User Settings → Advanced), right-click each channel → Copy Channel ID → `DISCORD_CHANNEL_ID` and `BOT_ERRORS_CHANNEL_ID`.
+5. Create three text channels: `#job-alerts` (Android/Kotlin postings), `#dev-jobs` (generic software engineer/developer postings), and `#bot-errors`.
+6. Enable Developer Mode in Discord (User Settings → Advanced), right-click each channel → Copy Channel ID → `DISCORD_CHANNEL_ID`, `DEV_JOBS_CHANNEL_ID`, and `BOT_ERRORS_CHANNEL_ID`.
 
 ### 4. Google Sheets
 1. Google Cloud Console → new project → enable **Google Sheets API**.
@@ -37,7 +37,7 @@ Create a **public** repo (e.g. `job-alert-bot`) and push this code to it. Public
 5. Copy the sheet ID from its URL → `GOOGLE_SHEET_ID`.
 
 ### 5. GitHub Actions secrets
-Repo → Settings → Secrets and variables → Actions → add each of: `GIST_TOKEN`, `GIST_ID`, `DISCORD_BOT_TOKEN`, `DISCORD_CHANNEL_ID`, `BOT_ERRORS_CHANNEL_ID`, `GOOGLE_SHEETS_CREDENTIALS`, `GOOGLE_SHEET_ID`.
+Repo → Settings → Secrets and variables → Actions → add each of: `GIST_TOKEN`, `GIST_ID`, `DISCORD_BOT_TOKEN`, `DISCORD_CHANNEL_ID`, `DEV_JOBS_CHANNEL_ID`, `BOT_ERRORS_CHANNEL_ID`, `GOOGLE_SHEETS_CREDENTIALS`, `GOOGLE_SHEET_ID`.
 
 Once secrets are set, trigger the workflow manually from the Actions tab (`workflow_dispatch`) to verify it runs end-to-end.
 
@@ -54,11 +54,13 @@ The workflow only listens for `workflow_dispatch` — there's no `schedule:` tri
 
 Do **not** re-add a `schedule:` trigger to the workflow alongside this — two trigger sources firing concurrently can race on the same Gist state (one run's newly-discovered job can get silently dropped if a second run reads/writes state at the same time).
 
-## Filtering behavior
-Two filters combine in `main.py` — a job must pass both to get posted (see [filters.py](filters.py)):
-- **Keyword**: title must contain `android`, `kotlin`, `jetpack compose`, or `mobile developer`
+## Filtering & channel routing
+Three filters combine in `main.py` — a job must pass all three to get posted (see [filters.py](filters.py)):
+- **Keyword/category** (`job_category()`): title must contain an Android keyword (`android`, `kotlin`, `jetpack compose`, `mobile developer`) — routed to `#job-alerts` — or a generic SWE keyword (`software engineer`, `software developer`, `backend engineer`, etc.) — routed to `#dev-jobs`. Android takes priority, so a title like "Software Engineer, Android" only posts once, to `#job-alerts`, not both channels.
 - **Location**: must resolve to a US location (phrase match like "United States", or a bounded 2-letter state code — extend `US_STATE_CODES` as you see real-data gaps)
 - **Experience range**: titles signaling more senior scope are excluded — `Intern`, `Staff`, `Principal`, `Distinguished`, `Lead`, `Manager`, `Director`, `Head`, `VP`. `Senior` is deliberately *not* excluded since those roles can still fall in a 2-4 year band.
+
+Per-company `discord_channel_id` (in `companies.json`) overrides category-based routing if set.
 
 ## Adding companies
 `companies.json` ships pre-seeded with 32 companies across Greenhouse and Ashby.

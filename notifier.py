@@ -76,11 +76,15 @@ def post_error(message: str) -> None:
 
 
 def get_reaction_status(message_id: str, channel_id: str | None = None) -> str | None:
+    # fetch the message once and read its reaction summary, instead of one
+    # request per emoji -- cuts reaction-sync from 3 requests/job to 1.
     cid = channel_id or config.DISCORD_CHANNEL_ID
+    r = _request_with_retry("GET", f"{API_BASE}/channels/{cid}/messages/{message_id}")
+    if r.status_code != 200:
+        return None
+    reactions = r.json().get("reactions") or []
+    present = {rx["emoji"]["name"] for rx in reactions if rx.get("count", 0) > 0}
     for emoji, status in REACTION_STATUS_MAP.items():
-        r = _request_with_retry(
-            "GET", f"{API_BASE}/channels/{cid}/messages/{message_id}/reactions/{emoji}"
-        )
-        if r.status_code == 200 and r.json():
+        if emoji in present:
             return status
     return None
