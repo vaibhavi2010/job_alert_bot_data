@@ -7,7 +7,7 @@ from connectors.base import Job
 
 API_BASE = "https://discord.com/api/v10"
 MAX_RETRIES = 5
-POLL_DURATION_HOURS = 72  # 3 days
+POLL_DURATION_HOURS = 4
 
 # legacy: messages posted before poll-based status tracking used plain
 # reactions -- kept so those older messages keep syncing correctly.
