@@ -2,27 +2,26 @@
 # slug is visible in the company's jobs.lever.co/{slug} URL.
 # Verified response shape (2026-07): [{"id", "text", "hostedUrl", "categories":
 # {"location", ...}, "createdAt" (ms epoch), ...}]
-from datetime import datetime, timezone
-
 import requests
 
 from .base import HEADERS, Job
 
 
 def normalize(raw: dict, company: str) -> Job:
-    created_at = raw.get("createdAt")
-    posted_date = (
-        datetime.fromtimestamp(created_at / 1000, tz=timezone.utc).isoformat()
-        if created_at is not None
-        else None
-    )
+    # Lever's API only exposes createdAt (original posting date), with no
+    # updatedAt/repost timestamp -- unlike Greenhouse's updated_at or Ashby's
+    # publishedAt. A job bumped/reposted by the company keeps its original
+    # createdAt, so filtering on it would make reposts invisible to is_recent
+    # forever. Leave posted_date unset (as Google's connector does) so
+    # is_recent always keeps these jobs and state-based dedup is the only
+    # freshness control.
     return Job(
         job_id=f"lever_{raw['id']}",
         title=raw["text"],
         company=company,
         url=raw["hostedUrl"],
         location=(raw.get("categories") or {}).get("location"),
-        posted_date=posted_date,
+        posted_date=None,
     )
 
 
