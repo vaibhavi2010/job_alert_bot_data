@@ -8,6 +8,13 @@
       "discord_channel_id": null
     },
     {
+      "name": "Amazon",
+      "enabled": true,
+      "connector": "amazon",
+      "query": "android",
+      "discord_channel_id": null
+    },
+    {
       "name": "Stripe",
       "enabled": true,
       "ats": "greenhouse",
