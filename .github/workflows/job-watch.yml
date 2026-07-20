@@ -1,8 +1,9 @@
 name: Job Watch
-# Triggered externally every 5 minutes via cron-job.org calling the
-# workflow_dispatch API endpoint (GitHub's own `schedule:` trigger is
+# Triggered externally via cron-job.org calling the workflow_dispatch API
+# endpoint on a fixed interval (GitHub's own `schedule:` trigger is
 # unreliable/deprioritized under load, and running both in parallel risks
-# two concurrent runs racing on the same Gist state).
+# two concurrent runs racing on the same Gist state). Interval is configured
+# in the cron-job.org dashboard, not here.
 on:
   workflow_dispatch: {}
 
