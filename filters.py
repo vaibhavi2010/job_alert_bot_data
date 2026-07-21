@@ -76,6 +76,37 @@ _SENIORITY_RE = re.compile(
     r"\b(intern(ship)?|" + "|".join(SENIORITY_EXCLUDE_TERMS) + r")\b", re.IGNORECASE
 )
 
+# same "roughly 0-4 years" target as the title check above, but applied to an
+# actual years-of-experience figure pulled from the description -- catches a
+# title like "Data Engineer" (no seniority keyword) whose qualifications
+# section actually asks for 6+ years.
+MAX_YEARS_REQUIRED = 5
+_YEARS_WINDOW = 40  # chars to look for "experience" around a years-mention, so an
+                     # unrelated number ("founded 10 years ago") doesn't false-match
+
+_YEARS_NUM_RE = re.compile(
+    r"(\d{1,2})\+?\s*(?:-|to|–)\s*\d{1,2}\+?\s*years?"  # "3-5 years" / "3 to 5 years" -- capture the lower bound
+    r"|(\d{1,2})\+\s*years?"                                  # "5+ years"
+    r"|(?:minimum(?:\s+of)?|at least)\s*(\d{1,2})\s*years?",  # "minimum of 3 years" / "at least 3 years"
+    re.IGNORECASE,
+)
+
+
+def _min_years_required(description: str) -> int | None:
+    """Best-effort extraction of the lowest years-of-experience figure
+    mentioned near the word "experience" in a job description. Takes the
+    minimum across all matches, not the first/max -- a JD listing "3+ years
+    required, 5+ years preferred for senior candidates" should be judged
+    on the 3, since that's the actual bar to be considered."""
+    years = []
+    for m in _YEARS_NUM_RE.finditer(description):
+        n = next(g for g in m.groups() if g is not None)
+        before = description[max(0, m.start() - _YEARS_WINDOW):m.start()].lower()
+        after = description[m.end():m.end() + _YEARS_WINDOW].lower()
+        if "experience" in before or "experience" in after:
+            years.append(int(n))
+    return min(years) if years else None
+
 
 def _match_category(text: str) -> str | None:
     if any(k in text for k in DATA_ENGINEER_KEYWORDS):
@@ -105,7 +136,13 @@ def job_category(job: Job) -> str | None:
 
 
 def is_within_experience_range(job: Job) -> bool:
-    return not _SENIORITY_RE.search(job.title)
+    if _SENIORITY_RE.search(job.title):
+        return False
+    if job.description:
+        min_years = _min_years_required(job.description)
+        if min_years is not None and min_years >= MAX_YEARS_REQUIRED:
+            return False
+    return True
 
 
 def _parse_posted_date(posted_date: str | None) -> datetime | None:
