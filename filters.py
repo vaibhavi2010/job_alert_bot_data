@@ -11,7 +11,7 @@ DATA_ENGINEER_KEYWORDS = [
 ]
 DATA_ANALYST_KEYWORDS = [
     "data analyst", "analytics analyst", "business intelligence analyst",
-    "bi analyst", "reporting analyst", "insights analyst",
+    "bi analyst", "reporting analyst", "insights analyst", "business analyst",
 ]
 DATA_SCIENTIST_KEYWORDS = ["data scientist", "data science"]
 
