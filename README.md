@@ -27,7 +27,7 @@ See [docs/job-alert-bot-implementation-doc.md](docs/job-alert-bot-implementation
         ┌────────────────────┼────────────────────┐       │
         ▼                    ▼                     ▼       ▼
   connectors/*.py       filters.py           notifier.py  state.py
-  (35 companies:        (category,           (Discord     (secret
+  (44 companies:        (category,           (Discord     (secret
   Greenhouse, Ashby,     location,            REST API:    Gist —
   Workday, custom        experience,          post/poll/   dedup +
   Google/Amazon)         freshness,           archive/     status

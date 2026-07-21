@@ -38,6 +38,10 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 - Peloton
 - Roblox
 - SoundCloud
+- Anthropic
+- Datadog
+- Fivetran
+- Scale AI
 
 ## Ashby
 - Notion
@@ -47,10 +51,13 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 - OpenAI
 - Watershed
 - Amplitude
+- Snowflake
+- Airbyte
 
 ## Lever
 - Spotify
+- Palantir
 
 ---
 
-**Total: 34 companies**
+**Total: 44 companies**

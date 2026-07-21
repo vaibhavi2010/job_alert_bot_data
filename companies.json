@@ -296,6 +296,62 @@
       "slug": "soundcloud71",
       "connector": "greenhouse",
       "discord_channel_id": null
+    },
+    {
+      "name": "Anthropic",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "anthropic",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Datadog",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "datadog",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Fivetran",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "fivetran",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Scale AI",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "scaleai",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Snowflake",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "snowflake",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Airbyte",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "airbyte",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Palantir",
+      "enabled": true,
+      "ats": "lever",
+      "slug": "palantir",
+      "connector": "lever",
+      "discord_channel_id": null
     }
   ]
 }
