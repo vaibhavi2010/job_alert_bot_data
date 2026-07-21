@@ -53,6 +53,7 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 - Amplitude
 - Snowflake
 - Airbyte
+- Clay
 
 ## Lever
 - Spotify
@@ -60,4 +61,4 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 
 ---
 
-**Total: 44 companies**
+**Total: 45 companies**

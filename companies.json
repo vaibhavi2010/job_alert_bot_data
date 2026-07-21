@@ -352,6 +352,14 @@
       "slug": "palantir",
       "connector": "lever",
       "discord_channel_id": null
+    },
+    {
+      "name": "Clay",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "claylabs",
+      "connector": "ashby",
+      "discord_channel_id": null
     }
   ]
 }
