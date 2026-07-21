@@ -1,7 +1,6 @@
 # Endpoint: https://www.amazon.jobs/en/search.json
 # Public, unauthenticated, documented-by-behavior search API used by the
-# amazon.jobs site itself. result_limit=100 returns all hits in one request
-# (48 hits seen for base_query=android as of 2026-07 -- well under 100).
+# amazon.jobs site itself. result_limit=100 returns all hits in one request.
 # Verified live (2026-07): fields id_icims, job_path, title, normalized_location,
 # posted_date all present and stable.
 from datetime import datetime, timezone
@@ -38,13 +37,14 @@ def normalize(raw: dict) -> Job:
 
 
 def fetch(params: dict) -> list[Job]:
-    query = params.get("query", "android")
+    query = params.get("query", "data")
+    category = params.get("category", "business-intelligence-data-engineering")
     r = requests.get(
         SEARCH_URL,
         params={
             "base_query": query,
             "normalized_country_code[]": "USA",
-            "category[]": "software-development",
+            "category[]": category,
             "result_limit": 100,
         },
         headers=HEADERS,

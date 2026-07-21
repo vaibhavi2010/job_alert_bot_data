@@ -61,7 +61,7 @@ def fetch(params: dict) -> list[Job]:
     dc = params["dc"]
     site = params["site"]
     company_name = params.get("name", tenant)
-    query = params.get("query", "android")
+    query = params.get("query", "data")
     url = f"https://{tenant}.{dc}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs"
 
     jobs = []

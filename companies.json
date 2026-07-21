@@ -4,14 +4,15 @@
       "name": "Google",
       "enabled": true,
       "connector": "google",
-      "query": "android",
+      "query": "data",
       "discord_channel_id": null
     },
     {
       "name": "Amazon",
       "enabled": true,
       "connector": "amazon",
-      "query": "android",
+      "query": "data",
+      "category": "business-intelligence-data-engineering",
       "discord_channel_id": null
     },
     {
@@ -21,7 +22,7 @@
       "tenant": "salesforce",
       "dc": "wd12",
       "site": "External_Career_Site",
-      "query": "android",
+      "query": "data",
       "discord_channel_id": null
     },
     {

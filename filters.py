@@ -5,11 +5,13 @@ from connectors.base import Job
 
 MAX_POSTING_AGE_DAYS = 3
 
-ANDROID_KEYWORDS = ["android", "kotlin", "jetpack compose", "mobile developer"]
-SWE_KEYWORDS = [
-    "software engineer", "software developer", "backend engineer",
-    "backend developer", "full stack engineer", "full stack developer",
-    "frontend engineer", "frontend developer", "software development engineer",
+DATA_ENGINEER_KEYWORDS = [
+    "data engineer", "data engineering", "analytics engineer",
+    "etl engineer", "big data engineer",
+]
+DATA_ANALYST_KEYWORDS = [
+    "data analyst", "analytics analyst", "business intelligence analyst",
+    "bi analyst", "reporting analyst", "insights analyst",
 ]
 
 US_PHRASES = ["united states", "usa", "u.s."]
@@ -64,14 +66,14 @@ _SENIORITY_RE = re.compile(
 
 
 def job_category(job: Job) -> str | None:
-    """Returns 'android', 'swe', or None. Android takes priority over the
-    broader SWE keyword set so a title like "Software Engineer, Android"
-    routes only to the Android channel, not both."""
+    """Returns 'data_engineer', 'data_analyst', or None. Data engineer takes
+    priority over the analyst keyword set so a title like "Data Engineer /
+    Analyst" routes only to one category, not both."""
     text = job.title.lower()
-    if any(k in text for k in ANDROID_KEYWORDS):
-        return "android"
-    if any(k in text for k in SWE_KEYWORDS):
-        return "swe"
+    if any(k in text for k in DATA_ENGINEER_KEYWORDS):
+        return "data_engineer"
+    if any(k in text for k in DATA_ANALYST_KEYWORDS):
+        return "data_analyst"
     return None
 
 

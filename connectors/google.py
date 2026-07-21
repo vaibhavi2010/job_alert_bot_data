@@ -41,7 +41,7 @@ def normalize(job_id: str, title: str, location: str) -> Job:
 
 
 def fetch(params: dict) -> list[Job]:
-    query = params.get("query", "android")
+    query = params.get("query", "data")
     r = requests.get(SEARCH_URL, params={"q": query}, headers=HEADERS, timeout=15)
     r.raise_for_status()
     matches = _JOB_RE.findall(r.text)

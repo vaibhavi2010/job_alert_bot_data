@@ -1,6 +1,6 @@
 # Job Alert Bot
 
-A $0/month job-alert pipeline that polls company career pages for new Android/Kotlin and general software-engineering postings, pushes instant Discord alerts with built-in application-status tracking, and logs everything to a Google Sheet.
+A $0/month job-alert pipeline that polls company career pages for new Data Engineer and Data Analyst postings, pushes instant Discord alerts with built-in application-status tracking, and logs everything to a Google Sheet.
 
 The goal isn't just "get notified" — it's to notify **fast enough to be among the first applicants** on a fresh posting. Every architectural decision below (polling cadence, freshness filtering, recency-first ordering) exists in service of that.
 
@@ -40,7 +40,7 @@ See [docs/job-alert-bot-implementation-doc.md](docs/job-alert-bot-implementation
 
 **Per-run flow (`main.py`, every 5-15 min):**
 1. Fetch open jobs from every enabled company in `companies.json` via its connector
-2. Filter each job: relevant category (Android or generic SWE) → US-located → within target experience range → posted within the last `MAX_POSTING_AGE_DAYS`
+2. Filter each job: relevant category (Data Engineer or Data Analyst) → US-located → within target experience range → posted within the last `MAX_POSTING_AGE_DAYS`
 3. Drop anything already tracked (dedup against the Gist-backed `state`)
 4. If a category found more new jobs than `MAX_NEW_JOBS_PER_CATEGORY_PER_RUN`, sort newest-first and post only the top N — the rest drip in over later runs instead of flooding a channel
 5. Post each surviving job to Discord with a native poll (`Applied` / `Skipped` / `Viewed`), log it to the Sheet, record it in `state`
@@ -55,7 +55,7 @@ Reads `state`, tallies how many jobs were posted and applied to today, broken do
 ## Key features
 
 - **Five ATS integrations**: generic connectors for Greenhouse, Ashby, and Workday (add a company with just a config entry, no code) plus custom connectors for Google (HTML scrape — no public API exists) and Amazon (public JSON API)
-- **Two-channel routing**: Android-specific postings and generic SWE postings go to separate Discord channels, never double-posted
+- **Category routing**: Data Engineer and Data Analyst postings are classified separately (never double-posted) and both currently route to a single `#job-alerts` channel, configurable per-category if you want to split them later
 - **Native Discord polls** for status tracking (`Applied`/`Skipped`/`Viewed`), auto-detected alongside a legacy emoji-reaction fallback for older messages
 - **Freshness + recency-first ordering**: stale postings are discarded outright, and when a per-run cap does trigger, the newest postings always win the available slots
 - **Auto-archiving**: jobs whose voting window closes unanswered are moved out of the live channels into `#archived-jobs`, keeping the working channels showing only actionable postings
@@ -115,7 +115,7 @@ Create a **public** repo and push this code to it. Public = unlimited free GitHu
 2. Under **Privileged Gateway Intents**, none are required (this bot only posts messages and reads poll results/reactions via REST — no gateway connection).
 3. Copy the bot token → `DISCORD_BOT_TOKEN`.
 4. OAuth2 → URL Generator → scope `bot`, permissions: `Send Messages`, `Read Message History`, `Add Reactions`. Open the generated URL to invite the bot to your server. (Bots can create polls and read poll results, but cannot vote on polls via the API — voting is a human-only client action, which is exactly the point.)
-5. Create five text channels: `#job-alerts` (Android/Kotlin postings), `#dev-jobs` (generic software engineer/developer postings), `#bot-errors`, `#archived-jobs` (unvoted jobs move here after expiry), and `#eod-updates` (daily summary).
+5. Create five text channels: `#job-alerts` (Data Engineer + Data Analyst postings), `#dev-jobs` (unused unless you split categories into separate channels), `#bot-errors`, `#archived-jobs` (unvoted jobs move here after expiry), and `#eod-updates` (daily summary).
 6. Enable Developer Mode in Discord (User Settings → Advanced), right-click each channel → Copy Channel ID → `DISCORD_CHANNEL_ID`, `DEV_JOBS_CHANNEL_ID`, `BOT_ERRORS_CHANNEL_ID`, `ARCHIVED_JOBS_CHANNEL_ID`, `EOD_UPDATES_CHANNEL_ID`.
 
 ### 4. Google Sheets
@@ -159,7 +159,7 @@ A per-company `try/except` in `main.py` means one connector failing (site redesi
 
 ### Filtering (`filters.py`)
 Four checks combine — a job must pass all four:
-- **Category** (`job_category()`): Android keywords (`android`, `kotlin`, `jetpack compose`, `mobile developer`) route to `#job-alerts`; generic SWE keywords (`software engineer`, `backend engineer`, etc.) route to `#dev-jobs`. Android takes priority — a title matching both never double-posts.
+- **Category** (`job_category()`): Data Engineer keywords (`data engineer`, `analytics engineer`, `etl engineer`, `big data engineer`, etc.) and Data Analyst keywords (`data analyst`, `bi analyst`, `reporting analyst`, etc.) are matched against the title; Data Engineer takes priority — a title matching both never double-posts.
 - **Location** (`is_us_location()`): handles multiple real-world formats seen across connectors — `"City, ST"`, `"City, State, Country"`, `"State - City"` (Workday), and explicitly excludes Canadian locations even when they coincidentally match a US state-code pattern (`"Toronto, ON, CA"`).
 - **Experience range** (`is_within_experience_range()`): excludes `Intern`, `Staff`, `Principal`, `Distinguished`, `Lead`, `Manager`, `Director`, `Head`, `VP`. `Senior` is deliberately kept.
 - **Freshness** (`is_recent()`): discards postings older than `MAX_POSTING_AGE_DAYS` (3). Jobs with no parseable `posted_date` (only Google's connector lacks one) skip this check and rely on dedup alone.
@@ -181,7 +181,7 @@ A mirror of `state` for easy browsing outside Discord — append on new job, upd
 
 ## Design decisions & known limitations
 
-- **This is a known-company allowlist, not a discovery engine.** It will never surface a company you haven't added. There's no free way to search "android" across every employer at once without a paid aggregator API.
+- **This is a known-company allowlist, not a discovery engine.** It will never surface a company you haven't added. There's no free way to search "data engineer"/"data analyst" across every employer at once without a paid aggregator API.
 - **Being a Workday enterprise (HCM/Financial) customer doesn't mean a company's public job board runs on Workday's recruiting module.** Verify by checking the actual careers URL before adding a `workday` entry.
 - **Per-run cap ordering is recency-based, not literally FIFO by discovery**, but ties within the same fetch aren't further disambiguated — acceptable given the cap rarely triggers once a company's initial backlog has drained.
 - **Legacy reaction-based messages never expire** (only polls do) — the auto-archive logic only applies to poll-based entries.

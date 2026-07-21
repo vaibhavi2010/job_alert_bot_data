@@ -63,7 +63,10 @@ def run() -> None:
         except Exception as e:
             log_error(f"{c['name']} connector failed: {e}")
 
-    CATEGORY_CHANNELS = {"android": config.DISCORD_CHANNEL_ID, "swe": config.DEV_JOBS_CHANNEL_ID}
+    CATEGORY_CHANNELS = {
+        "data_engineer": config.DISCORD_CHANNEL_ID,
+        "data_analyst": config.DEV_JOBS_CHANNEL_ID,
+    }
 
     categorized = ((j, job_category(j)) for j in all_jobs)
     relevant = [
