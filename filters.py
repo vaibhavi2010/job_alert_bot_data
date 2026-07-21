@@ -13,6 +13,7 @@ DATA_ANALYST_KEYWORDS = [
     "data analyst", "analytics analyst", "business intelligence analyst",
     "bi analyst", "reporting analyst", "insights analyst",
 ]
+DATA_SCIENTIST_KEYWORDS = ["data scientist", "data science"]
 
 US_PHRASES = ["united states", "usa", "u.s."]
 US_STATE_CODES = ["ca", "ny", "tx", "wa", "il", "ma", "az"]
@@ -66,14 +67,16 @@ _SENIORITY_RE = re.compile(
 
 
 def job_category(job: Job) -> str | None:
-    """Returns 'data_engineer', 'data_analyst', or None. Data engineer takes
-    priority over the analyst keyword set so a title like "Data Engineer /
-    Analyst" routes only to one category, not both."""
+    """Returns 'data_engineer', 'data_analyst', 'data_scientist', or None.
+    Checked in that priority order so a title matching more than one keyword
+    set routes to only one category, not multiple."""
     text = job.title.lower()
     if any(k in text for k in DATA_ENGINEER_KEYWORDS):
         return "data_engineer"
     if any(k in text for k in DATA_ANALYST_KEYWORDS):
         return "data_analyst"
+    if any(k in text for k in DATA_SCIENTIST_KEYWORDS):
+        return "data_scientist"
     return None
 
 

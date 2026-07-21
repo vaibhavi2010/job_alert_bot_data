@@ -9,7 +9,7 @@ from state import load_state
 # Arizona doesn't observe DST, so America/Phoenix is a fixed UTC-7 year-round
 # -- avoids pulling in a timezone library for one offset.
 LOCAL_TZ = timezone(timedelta(hours=-7))
-CATEGORIES = ("data_engineer", "data_analyst")
+CATEGORIES = ("data_engineer", "data_analyst", "data_scientist")
 
 
 def _local_date(iso_str: str) -> str:
