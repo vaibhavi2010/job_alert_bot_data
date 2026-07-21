@@ -99,6 +99,12 @@ cp .env.example .env   # fill in values, see below
 python main.py
 ```
 
+To sanity-check all connectors (fetch + filter counts per company) without posting to Discord, writing to Sheets, or touching the Gist:
+
+```
+python scripts/test_connectors.py
+```
+
 ## One-time account setup
 
 ### 1. GitHub repo (public)
