@@ -63,8 +63,8 @@ _CANADA_PROVINCE_CA_RE = re.compile(
     r"\b(" + "|".join(CANADIAN_PROVINCE_CODES) + r")\s*,\s*ca\b"
 )
 
-# titles implying more experience than targeted (roughly 0-4 years). "Senior" is
-# deliberately not excluded — those postings can still fall within a 2-4 year band.
+# titles implying more experience than targeted (roughly 0-3 years). "Senior" is
+# deliberately not excluded — those postings can still fall within a 1-3 year band.
 # "intern" is handled as intern(ship)? since a trailing \b after "intern" alone
 # doesn't match "Internship" (word boundary fails mid-word) — a real miss seen
 # against live data ("Software Engineer Internship, Android" slipped through).
@@ -76,11 +76,11 @@ _SENIORITY_RE = re.compile(
     r"\b(intern(ship)?|" + "|".join(SENIORITY_EXCLUDE_TERMS) + r")\b", re.IGNORECASE
 )
 
-# same "roughly 0-4 years" target as the title check above, but applied to an
+# same "roughly 0-3 years" target as the title check above, but applied to an
 # actual years-of-experience figure pulled from the description -- catches a
 # title like "Data Engineer" (no seniority keyword) whose qualifications
-# section actually asks for 6+ years.
-MAX_YEARS_REQUIRED = 5
+# section actually asks for 4+ years.
+MAX_YEARS_REQUIRED = 4
 _YEARS_WINDOW = 40  # chars to look for "experience" around a years-mention, so an
                      # unrelated number ("founded 10 years ago") doesn't false-match
 
