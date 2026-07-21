@@ -22,6 +22,7 @@ def normalize(raw: dict, company: str) -> Job:
         url=raw["hostedUrl"],
         location=(raw.get("categories") or {}).get("location"),
         posted_date=None,
+        description=raw.get("descriptionPlain"),
     )
 
 

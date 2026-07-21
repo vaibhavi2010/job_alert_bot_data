@@ -15,6 +15,17 @@ DATA_ANALYST_KEYWORDS = [
 ]
 DATA_SCIENTIST_KEYWORDS = ["data scientist", "data science"]
 
+# generic-titled early-career postings (e.g. "Software Engineer, University
+# Grad Program") don't name a track in the title -- the actual specialization
+# only shows up in the description. Scoped narrowly to these new-grad signals
+# so an ordinary SWE posting that happens to mention "data" in passing isn't
+# swept in by a description-only match.
+_NEW_GRAD_TITLE_RE = re.compile(
+    r"\b(new grad|university grad|recent graduate|early career|rotational program|grad program)\b"
+    r"|class of 20\d\d",
+    re.IGNORECASE,
+)
+
 US_PHRASES = ["united states", "usa", "u.s."]
 US_STATE_CODES = ["ca", "ny", "tx", "wa", "il", "ma", "az"]
 # Workday returns full state names in "State - City" order (e.g. "California -
@@ -66,17 +77,30 @@ _SENIORITY_RE = re.compile(
 )
 
 
-def job_category(job: Job) -> str | None:
-    """Returns 'data_engineer', 'data_analyst', 'data_scientist', or None.
-    Checked in that priority order so a title matching more than one keyword
-    set routes to only one category, not multiple."""
-    text = job.title.lower()
+def _match_category(text: str) -> str | None:
     if any(k in text for k in DATA_ENGINEER_KEYWORDS):
         return "data_engineer"
     if any(k in text for k in DATA_ANALYST_KEYWORDS):
         return "data_analyst"
     if any(k in text for k in DATA_SCIENTIST_KEYWORDS):
         return "data_scientist"
+    return None
+
+
+def job_category(job: Job) -> str | None:
+    """Returns 'data_engineer', 'data_analyst', 'data_scientist', or None.
+    Checked in that priority order so a title matching more than one keyword
+    set routes to only one category, not multiple.
+
+    Falls back to the job description only for titles carrying a generic
+    new-grad signal (see _NEW_GRAD_TITLE_RE) -- these programs often don't
+    name a track in the title itself (e.g. "Software Engineer, University
+    Grad Program" that's actually a data engineering rotation)."""
+    category = _match_category(job.title.lower())
+    if category is not None:
+        return category
+    if job.description and _NEW_GRAD_TITLE_RE.search(job.title):
+        return _match_category(job.description.lower())
     return None
 
 

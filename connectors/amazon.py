@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 import requests
 
-from .base import HEADERS, Job
+from .base import HEADERS, Job, strip_html
 
 SEARCH_URL = "https://www.amazon.jobs/en/search.json"
 BASE_URL = "https://www.amazon.jobs"
@@ -25,6 +25,12 @@ def _normalize_posted_date(raw: str | None) -> str | None:
         return None
 
 
+def _description(raw: dict) -> str | None:
+    parts = [raw.get("description"), raw.get("basic_qualifications"), raw.get("preferred_qualifications")]
+    combined = " ".join(p for p in parts if p)
+    return strip_html(combined) if combined else None
+
+
 def normalize(raw: dict) -> Job:
     return Job(
         job_id=f"amazon_{raw['id_icims']}",
@@ -33,6 +39,7 @@ def normalize(raw: dict) -> Job:
         url=f"{BASE_URL}{raw['job_path']}",
         location=raw.get("normalized_location"),
         posted_date=_normalize_posted_date(raw.get("posted_date")),
+        description=_description(raw),
     )
 
 

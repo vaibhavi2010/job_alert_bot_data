@@ -4,7 +4,7 @@
 # "absolute_url", "updated_at", ...}]}
 import requests
 
-from .base import HEADERS, Job
+from .base import HEADERS, Job, strip_html
 
 
 def normalize(raw: dict, company: str) -> Job:
@@ -15,6 +15,7 @@ def normalize(raw: dict, company: str) -> Job:
         url=raw["absolute_url"],
         location=(raw.get("location") or {}).get("name"),
         posted_date=raw.get("updated_at"),
+        description=strip_html(raw.get("content")),
     )
 
 
