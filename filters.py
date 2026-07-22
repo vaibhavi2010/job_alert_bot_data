@@ -27,7 +27,21 @@ _NEW_GRAD_TITLE_RE = re.compile(
 )
 
 US_PHRASES = ["united states", "usa", "u.s."]
-US_STATE_CODES = ["ca", "ny", "tx", "wa", "il", "ma", "az"]
+# Full USPS 2-letter list -- some Workday tenants (Visa, Comcast) and Oracle/
+# custom boards (Microsoft, JPMorgan) return abbreviated "City, ST" or
+# "US - City, ST" rather than the full state name, and the original 7-code
+# list missed most of them (e.g. "US - Ashburn, VA" was silently excluded).
+US_STATE_CODES = [
+    "al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", "id",
+    "il", "in", "ia", "ks", "ky", "la", "me", "md", "ma", "mi", "mn", "ms",
+    "mo", "mt", "ne", "nv", "nh", "nj", "nm", "ny", "nc", "nd", "oh", "ok",
+    "or", "pa", "ri", "sc", "sd", "tn", "tx", "ut", "vt", "va", "wa", "wv",
+    "wi", "wy",
+]
+# bare "US" (not "usa"/"u.s.") shows up standalone in "Remote - US", "US
+# Remote", and Workday's "US - City, ST" -- word-bounded so it can't match
+# inside "campus"/"Belarus"/etc.
+_US_TOKEN_RE = re.compile(r"\bus\b", re.IGNORECASE)
 # Workday returns full state names in "State - City" order (e.g. "California -
 # San Francisco"), not the "City, ST" comma format Greenhouse/Ashby/Amazon use
 # -- a real miss found testing the Workday connector against live Salesforce
@@ -71,6 +85,8 @@ _CANADA_PROVINCE_CA_RE = re.compile(
 SENIORITY_EXCLUDE_TERMS = [
     "staff", "principal", "distinguished",
     "lead", "manager", "director", "head", "vp",
+    "vice president",  # Goldman Sachs' corporate-title suffix ("... - Vice President - Dallas"),
+                        # not caught by the "vp" abbreviation check alone
 ]
 _SENIORITY_RE = re.compile(
     r"\b(intern(ship)?|" + "|".join(SENIORITY_EXCLUDE_TERMS) + r")\b", re.IGNORECASE
@@ -201,5 +217,7 @@ def is_us_location(job: Job) -> bool:
     if any(phrase in loc for phrase in CANADA_PHRASES) or _CANADA_PROVINCE_CA_RE.search(loc):
         return False
     if any(phrase in loc for phrase in US_PHRASES):
+        return True
+    if _US_TOKEN_RE.search(loc):
         return True
     return bool(_STATE_CODE_RE.search(loc)) or bool(_STATE_NAME_RE.search(loc))

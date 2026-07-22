@@ -8,6 +8,18 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 ## Amazon (custom connector)
 - Amazon
 
+## Goldman Sachs (custom connector)
+- Goldman Sachs
+
+## JPMorgan Chase (custom connector -- Oracle Recruiting Cloud)
+- JPMorgan Chase
+
+## Microsoft (custom connector)
+- Microsoft
+
+## TikTok (custom connector)
+- TikTok
+
 ## Workday
 - Salesforce
 - Nike
@@ -118,4 +130,4 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 
 ---
 
-**Total: 102 companies**
+**Total: 106 companies**

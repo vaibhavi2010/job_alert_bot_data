@@ -27,11 +27,11 @@ See [docs/job-alert-bot-implementation-doc.md](docs/job-alert-bot-implementation
         ┌────────────────────┼────────────────────┐       │
         ▼                    ▼                     ▼       ▼
   connectors/*.py       filters.py           notifier.py  state.py
-  (102 companies:       (category,           (Discord     (secret
+  (106 companies:       (category,           (Discord     (secret
   Greenhouse, Ashby,     location,            REST API:    Gist —
-  Workday, custom        experience,          post/poll/   dedup +
-  Google/Amazon)         freshness,           archive/     status
-                         recency sort)         sync)        store)
+  Lever, Workday,        experience,          post/poll/   dedup +
+  custom connectors      freshness,           archive/     status
+  per-company)           recency sort)         sync)        store)
                                                     │
                                               sheets.py
                                               (Google Sheets
@@ -54,7 +54,7 @@ Reads `state`, tallies how many jobs were posted and applied to today, broken do
 
 ## Key features
 
-- **Five ATS integrations**: generic connectors for Greenhouse, Ashby, and Workday (add a company with just a config entry, no code) plus custom connectors for Google (HTML scrape — no public API exists) and Amazon (public JSON API)
+- **Ten ATS integrations**: generic connectors for Greenhouse, Ashby, Lever, and Workday (add a company with just a config entry, no code) plus custom connectors for companies with their own proprietary careers platform — Google (HTML scrape), Amazon (public JSON API), Goldman Sachs (public GraphQL gateway), JPMorgan Chase (Oracle Recruiting Cloud REST API), Microsoft (Phenom-based search API), and TikTok (public search API)
 - **Category routing**: Data Engineer and Data Analyst postings are classified separately (never double-posted) and both currently route to a single `#job-alerts` channel, configurable per-category if you want to split them later
 - **Native Discord polls** for status tracking (`Applied`/`Skipped`/`Viewed`), auto-detected alongside a legacy emoji-reaction fallback for older messages
 - **Freshness + recency-first ordering**: stale postings are discarded outright, and when a per-run cap does trigger, the newest postings always win the available slots
@@ -72,7 +72,7 @@ job-alert-bot/
 ├── main.py                  # orchestrator: fetch -> filter -> post -> sync -> archive
 ├── eod_summary.py           # daily posted/applied summary
 ├── config.py                # env vars + companies.json loader
-├── companies.json           # tracked companies (102, across 6 connector types)
+├── companies.json           # tracked companies (106, across 10 connector types)
 ├── filters.py                # category/location/experience/freshness/sort logic
 ├── notifier.py               # Discord REST: post, poll, archive-move, status sync
 ├── sheets.py                  # Google Sheets logging
@@ -81,9 +81,14 @@ job-alert-bot/
 │   ├── base.py                # shared Job dataclass
 │   ├── greenhouse.py          # generic, slug-based
 │   ├── ashby.py                # generic, slug-based
+│   ├── lever.py                # generic, slug-based
 │   ├── workday.py              # generic, tenant/dc/site-based
 │   ├── google.py                # custom: HTML scrape
-│   └── amazon.py                 # custom: public JSON API
+│   ├── amazon.py                 # custom: public JSON API
+│   ├── goldman_sachs.py           # custom: public GraphQL gateway
+│   ├── jpmorgan.py                 # custom: Oracle Recruiting Cloud REST API
+│   ├── microsoft.py                 # custom: Phenom-based search API
+│   └── tiktok.py                     # custom: public search API
 └── .github/workflows/
     ├── job-watch.yml            # every-5-15-min poller
     └── eod-summary.yml           # once-daily summary
@@ -152,23 +157,26 @@ Do **not** re-add a `schedule:` trigger to `job-watch.yml` alongside this — tw
 ## How it works
 
 ### Connectors (`connectors/*.py`)
-Every connector exposes one function, `fetch(params) -> list[Job]`, returning the shared `Job` dataclass (`base.py`). Three connector *types* exist:
+Every connector exposes one function, `fetch(params) -> list[Job]`, returning the shared `Job` dataclass (`base.py`). Four connector types are generic (add a company with just a config entry); the rest are one-off custom connectors for companies running their own proprietary careers platform:
 
 | Type | Companies need | Example |
 |---|---|---|
 | Greenhouse (generic) | just a `slug` | `boards-api.greenhouse.io/v1/boards/<slug>/jobs` |
 | Ashby (generic) | just a `slug` | `api.ashbyhq.com/posting-api/job-board/<slug>` |
+| Lever (generic) | just a `slug` | `api.lever.co/v0/postings/<slug>` |
 | Workday (generic) | `tenant`, `dc`, `site` | `<tenant>.<dc>.myworkdayjobs.com/wday/cxs/<tenant>/<site>/jobs` |
-| Custom | one Python file | Google (HTML scrape), Amazon (public JSON API) |
+| Custom | one Python file | Google (HTML scrape), Amazon (public JSON API), Goldman Sachs (public GraphQL gateway), JPMorgan Chase (Oracle Recruiting Cloud), Microsoft (Phenom-based search API), TikTok (public search API) |
+
+Each custom connector's public, unauthenticated endpoint was found by running a real search on the company's own careers site and inspecting network requests (or, for Google/Amazon, reading the rendered page/response directly) — never guessed. Meta was investigated and deliberately skipped: its job search only goes through Facebook's internal CSRF-token-gated "Comet" GraphQL infrastructure, the same instability class the Google connector's own comment already warns about, so no connector was built against it.
 
 A per-company `try/except` in `main.py` means one connector failing (site redesign, API change) never breaks the whole run.
 
 ### Filtering (`filters.py`)
 Four checks combine — a job must pass all four:
 - **Category** (`job_category()`): Data Engineer, Data Analyst, and Data Scientist keyword sets are matched against the title, in that priority order — a title matching more than one set never double-posts. For titles carrying a generic new-grad signal (`new grad`, `class of 2026`, `university grad`, `rotational program`, etc.) that don't name a track, falls back to matching the same keyword sets against the job description instead — catches postings like "Software Engineer, University Grad Program" that are actually a data rotation. Only available where the connector exposes description text cheaply (Greenhouse, Ashby, Lever, Amazon); Workday and Google stay title-only.
-- **Location** (`is_us_location()`): handles multiple real-world formats seen across connectors — `"City, ST"`, `"City, State, Country"`, `"State - City"` (Workday), and explicitly excludes Canadian locations even when they coincidentally match a US state-code pattern (`"Toronto, ON, CA"`).
-- **Experience range** (`is_within_experience_range()`): targets roughly 0-3 years. Excludes titles containing `Intern`, `Staff`, `Principal`, `Distinguished`, `Lead`, `Manager`, `Director`, `Head`, `VP` — `Senior` is deliberately kept, since it can still fall within a 1-3 year band. Also parses the lowest years-of-experience figure mentioned near "experience" in the description (where available) and excludes if it's 4+ — catches a clean "Data Engineer" title whose qualifications section actually asks for more.
-- **Freshness** (`is_recent()`): discards postings older than `MAX_POSTING_AGE_DAYS` (3). Jobs with no parseable `posted_date` skip this check and rely on dedup alone — Google (no date field exists), Lever, and Ashby (both expose only an original-publish timestamp that doesn't update on repost, so gating freshness on it would permanently exclude a job the company reopens later) all leave it unset deliberately.
+- **Location** (`is_us_location()`): handles multiple real-world formats seen across connectors — `"City, ST"`, `"City, State, Country"`, `"State - City"` (Workday), a bare `"US"` token (`"Remote - US"`, `"US - Ashburn, VA"` — Visa/Microsoft use this and it was silently excluded until fixed), and all 50 USPS state abbreviations (the original 7-code list missed most states). Explicitly excludes Canadian locations even when they coincidentally match a US state-code pattern (`"Toronto, ON, CA"`).
+- **Experience range** (`is_within_experience_range()`): targets roughly 0-3 years. Excludes titles containing `Intern`, `Staff`, `Principal`, `Distinguished`, `Lead`, `Manager`, `Director`, `Head`, `VP`/`Vice President` (the `VP` abbreviation alone missed Goldman Sachs' spelled-out corporate-title suffix) — `Senior` is deliberately kept, since it can still fall within a 1-3 year band. Also parses the lowest years-of-experience figure mentioned near "experience" in the description (where available) and excludes if it's 4+ — catches a clean "Data Engineer" title whose qualifications section actually asks for more.
+- **Freshness** (`is_recent()`): discards postings older than `MAX_POSTING_AGE_DAYS` (3). Jobs with no parseable `posted_date` skip this check and rely on dedup alone — Google, Goldman Sachs, and TikTok (no date field exposed by their APIs), plus Lever and Ashby (both expose only an original-publish timestamp that doesn't update on repost, so gating freshness on it would permanently exclude a job the company reopens later), all leave it unset deliberately. JPMorgan Chase and Microsoft do expose a real posted date and are filtered normally.
 
 `sort_by_recency()` orders newest-first before the per-run cap applies, so a 10-minute-old posting never loses a slot to a 2-day-old one.
 

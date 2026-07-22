@@ -832,6 +832,34 @@
       "slug": "elevenlabs",
       "connector": "ashby",
       "discord_channel_id": null
+    },
+    {
+      "name": "Goldman Sachs",
+      "enabled": true,
+      "connector": "goldman_sachs",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "JPMorgan Chase",
+      "enabled": true,
+      "connector": "jpmorgan",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Microsoft",
+      "enabled": true,
+      "connector": "microsoft",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "TikTok",
+      "enabled": true,
+      "connector": "tiktok",
+      "query": "data",
+      "discord_channel_id": null
     }
   ]
 }
