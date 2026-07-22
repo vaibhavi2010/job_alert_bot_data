@@ -360,6 +360,478 @@
       "slug": "claylabs",
       "connector": "ashby",
       "discord_channel_id": null
+    },
+    {
+      "name": "Nike",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "nike",
+      "dc": "wd1",
+      "site": "nke",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Target",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "target",
+      "dc": "wd5",
+      "site": "targetcareers",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Comcast",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "comcast",
+      "dc": "wd5",
+      "site": "Comcast_Careers",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Visa",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "visa",
+      "dc": "wd5",
+      "site": "Visa",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "T-Mobile",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "tmobile",
+      "dc": "wd1",
+      "site": "External",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Adobe",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "adobe",
+      "dc": "wd5",
+      "site": "external_experienced",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Mastercard",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "mastercard",
+      "dc": "wd1",
+      "site": "CorporateCareers",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "PayPal",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "paypal",
+      "dc": "wd1",
+      "site": "jobs",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Cloudflare",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "cloudflare",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "MongoDB",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "mongodb",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Elastic",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "elastic",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "CockroachDB",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "cockroachlabs",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "New Relic",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "newrelic",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Sumo Logic",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "sumologic",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "PagerDuty",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "pagerduty",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "LaunchDarkly",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "launchdarkly",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Samsara",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "samsara",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Postman",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "postman",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Twilio",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "twilio",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Okta",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "okta",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Zscaler",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "zscaler",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Smartsheet",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "smartsheet",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Mixpanel",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "mixpanel",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Klaviyo",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "klaviyo",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Braze",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "braze",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Intercom",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "intercom",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Contentful",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "contentful",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Airtable",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "airtable",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Calendly",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "calendly",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Block",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "block",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "SoFi",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "sofi",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Betterment",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "betterment",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Upstart",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "upstart",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Carta",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "carta",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Marqeta",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "marqeta",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Gemini",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "gemini",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Checkr",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "checkr",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Justworks",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "justworks",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Oscar Health",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "oscar",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Toast",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "toast",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Faire",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "faire",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Flexport",
+      "enabled": true,
+      "ats": "greenhouse",
+      "slug": "flexport",
+      "connector": "greenhouse",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Gopuff",
+      "enabled": true,
+      "ats": "lever",
+      "slug": "gopuff",
+      "connector": "lever",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Cohere",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "cohere",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Perplexity",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "perplexity",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Cursor",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "cursor",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Replit",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "replit",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Sierra",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "sierra",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Harvey",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "harvey",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Baseten",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "baseten",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Modal",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "modal",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Supabase",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "supabase",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Render",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "render",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Temporal",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "temporal",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Drata",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "drata",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Zip",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "zip",
+      "connector": "ashby",
+      "discord_channel_id": null
+    },
+    {
+      "name": "ElevenLabs",
+      "enabled": true,
+      "ats": "ashby",
+      "slug": "elevenlabs",
+      "connector": "ashby",
+      "discord_channel_id": null
     }
   ]
 }

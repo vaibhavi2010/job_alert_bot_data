@@ -27,7 +27,7 @@ See [docs/job-alert-bot-implementation-doc.md](docs/job-alert-bot-implementation
         ┌────────────────────┼────────────────────┐       │
         ▼                    ▼                     ▼       ▼
   connectors/*.py       filters.py           notifier.py  state.py
-  (44 companies:        (category,           (Discord     (secret
+  (102 companies:       (category,           (Discord     (secret
   Greenhouse, Ashby,     location,            REST API:    Gist —
   Workday, custom        experience,          post/poll/   dedup +
   Google/Amazon)         freshness,           archive/     status
@@ -72,7 +72,7 @@ job-alert-bot/
 ├── main.py                  # orchestrator: fetch -> filter -> post -> sync -> archive
 ├── eod_summary.py           # daily posted/applied summary
 ├── config.py                # env vars + companies.json loader
-├── companies.json           # tracked companies (35, across 5 connector types)
+├── companies.json           # tracked companies (102, across 6 connector types)
 ├── filters.py                # category/location/experience/freshness/sort logic
 ├── notifier.py               # Discord REST: post, poll, archive-move, status sync
 ├── sheets.py                  # Google Sheets logging

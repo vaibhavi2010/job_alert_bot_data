@@ -10,6 +10,14 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 
 ## Workday
 - Salesforce
+- Nike
+- Target
+- Comcast
+- Visa
+- T-Mobile
+- Adobe
+- Mastercard
+- PayPal
 
 ## Greenhouse
 - Stripe
@@ -42,6 +50,40 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 - Datadog
 - Fivetran
 - Scale AI
+- Cloudflare
+- MongoDB
+- Elastic
+- CockroachDB
+- New Relic
+- Sumo Logic
+- PagerDuty
+- LaunchDarkly
+- Samsara
+- Postman
+- Twilio
+- Okta
+- Zscaler
+- Smartsheet
+- Mixpanel
+- Klaviyo
+- Braze
+- Intercom
+- Contentful
+- Airtable
+- Calendly
+- Block
+- SoFi
+- Betterment
+- Upstart
+- Carta
+- Marqeta
+- Gemini
+- Checkr
+- Justworks
+- Oscar Health
+- Toast
+- Faire
+- Flexport
 
 ## Ashby
 - Notion
@@ -54,11 +96,26 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 - Snowflake
 - Airbyte
 - Clay
+- Cohere
+- Perplexity
+- Cursor
+- Replit
+- Sierra
+- Harvey
+- Baseten
+- Modal
+- Supabase
+- Render
+- Temporal
+- Drata
+- Zip
+- ElevenLabs
 
 ## Lever
 - Spotify
 - Palantir
+- Gopuff
 
 ---
 
-**Total: 45 companies**
+**Total: 102 companies**
