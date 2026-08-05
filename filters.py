@@ -14,6 +14,12 @@ DATA_ANALYST_KEYWORDS = [
     "bi analyst", "reporting analyst", "insights analyst", "business analyst",
 ]
 DATA_SCIENTIST_KEYWORDS = ["data scientist", "data science"]
+# Deliberately generic (no data/analytics qualifier) -- checked last in
+# _match_category so a title like "Software Engineer, Data Analytics" still
+# routes to the more specific data category first, not this catch-all.
+SOFTWARE_ENGINEER_KEYWORDS = [
+    "software engineer", "software engineering", "software development engineer",
+]
 
 # generic-titled early-career postings (e.g. "Software Engineer, University
 # Grad Program") don't name a track in the title -- the actual specialization
@@ -27,10 +33,10 @@ _NEW_GRAD_TITLE_RE = re.compile(
 )
 
 US_PHRASES = ["united states", "usa", "u.s."]
-# Full USPS 2-letter list -- some Workday tenants (Visa, Comcast) and Oracle/
-# custom boards (Microsoft, JPMorgan) return abbreviated "City, ST" or
-# "US - City, ST" rather than the full state name, and the original 7-code
-# list missed most of them (e.g. "US - Ashburn, VA" was silently excluded).
+# Full USPS 2-letter list -- some Workday tenants (Visa, Comcast) and custom
+# boards (Microsoft) return abbreviated "City, ST" or "US - City, ST" rather
+# than the full state name, and the original 7-code list missed most of them
+# (e.g. "US - Ashburn, VA" was silently excluded).
 US_STATE_CODES = [
     "al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", "id",
     "il", "in", "ia", "ks", "ky", "la", "me", "md", "ma", "mi", "mn", "ms",
@@ -131,13 +137,16 @@ def _match_category(text: str) -> str | None:
         return "data_analyst"
     if any(k in text for k in DATA_SCIENTIST_KEYWORDS):
         return "data_scientist"
+    if any(k in text for k in SOFTWARE_ENGINEER_KEYWORDS):
+        return "software_engineer"
     return None
 
 
 def job_category(job: Job) -> str | None:
-    """Returns 'data_engineer', 'data_analyst', 'data_scientist', or None.
-    Checked in that priority order so a title matching more than one keyword
-    set routes to only one category, not multiple.
+    """Returns 'data_engineer', 'data_analyst', 'data_scientist',
+    'software_engineer', or None. Checked in that priority order so a title
+    matching more than one keyword set routes to only one category, not
+    multiple -- 'software_engineer' is deliberately the last, broadest catch-all.
 
     Falls back to the job description only for titles carrying a generic
     new-grad signal (see _NEW_GRAD_TITLE_RE) -- these programs often don't

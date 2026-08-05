@@ -841,13 +841,6 @@
       "discord_channel_id": null
     },
     {
-      "name": "JPMorgan Chase",
-      "enabled": true,
-      "connector": "jpmorgan",
-      "query": "data",
-      "discord_channel_id": null
-    },
-    {
       "name": "Microsoft",
       "enabled": true,
       "connector": "microsoft",
@@ -858,6 +851,13 @@
       "name": "TikTok",
       "enabled": true,
       "connector": "tiktok",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Apple",
+      "enabled": true,
+      "connector": "apple",
       "query": "data",
       "discord_channel_id": null
     }

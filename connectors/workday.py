@@ -80,6 +80,10 @@ def fetch(params: dict) -> list[Job]:
         postings = data.get("jobPostings", [])
         if not postings:
             break
-        jobs.extend(normalize(p, tenant, dc, site, company_name) for p in postings)
+        # Workday occasionally injects a "spotlight"/promoted entry that carries
+        # only a bulletFields key and none of the normal posting fields -- skip
+        # those rather than letting one malformed entry crash the whole fetch
+        # (found live against Visa: 1 of 20 results was spotlight-only).
+        jobs.extend(normalize(p, tenant, dc, site, company_name) for p in postings if "externalPath" in p)
         offset += PAGE_SIZE
     return jobs

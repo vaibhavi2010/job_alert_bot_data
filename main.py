@@ -67,6 +67,7 @@ def run() -> None:
         "data_engineer": config.DISCORD_CHANNEL_ID,
         "data_analyst": config.DEV_JOBS_CHANNEL_ID,
         "data_scientist": config.DISCORD_CHANNEL_ID,
+        "software_engineer": config.DISCORD_CHANNEL_ID,
     }
 
     categorized = ((j, job_category(j)) for j in all_jobs)

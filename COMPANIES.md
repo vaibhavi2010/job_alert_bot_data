@@ -5,14 +5,14 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 ## Google (custom connector)
 - Google
 
+## Apple (custom connector)
+- Apple
+
 ## Amazon (custom connector)
 - Amazon
 
 ## Goldman Sachs (custom connector)
 - Goldman Sachs
-
-## JPMorgan Chase (custom connector -- Oracle Recruiting Cloud)
-- JPMorgan Chase
 
 ## Microsoft (custom connector)
 - Microsoft
@@ -131,3 +131,9 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 ---
 
 **Total: 106 companies**
+
+---
+
+**Investigated and deliberately not added:**
+- **Tesla** -- careers.tesla.com sits behind Akamai Bot Manager (a live bot-detection challenge cookie, `_abck`, was confirmed on the page). Circumventing that would mean bypassing real bot-detection, which this project won't do. No connector was built.
+- **Meta** -- metacareers.com job search only goes through Facebook's internal CSRF-token-gated "Comet" GraphQL infrastructure, not a stable public API. Same instability class as the risk already flagged in `connectors/google.py`'s own comment. No connector was built.
