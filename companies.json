@@ -860,6 +860,140 @@
       "connector": "apple",
       "query": "data",
       "discord_channel_id": null
+    },
+    {
+      "name": "Broadcom",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "broadcom",
+      "dc": "wd1",
+      "site": "External_Career",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Nvidia",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "nvidia",
+      "dc": "wd5",
+      "site": "NVIDIAExternalCareerSite",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Intel",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "intel",
+      "dc": "wd1",
+      "site": "External",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Cadence",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "cadence",
+      "dc": "wd1",
+      "site": "External_Careers",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "NXP",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "nxp",
+      "dc": "wd3",
+      "site": "careers",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Analog Devices",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "analogdevices",
+      "dc": "wd1",
+      "site": "External",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Micron",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "micron",
+      "dc": "wd1",
+      "site": "External",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "HP",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "hp",
+      "dc": "wd5",
+      "site": "ExternalCareerSite",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Samsung",
+      "enabled": true,
+      "connector": "workday",
+      "tenant": "sec",
+      "dc": "wd3",
+      "site": "Samsung_Careers",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Qualcomm",
+      "enabled": true,
+      "connector": "eightfold",
+      "host": "qualcomm.eightfold.ai",
+      "domain": "qualcomm.com",
+      "id_prefix": "qualcomm",
+      "base_url": "https://careers.qualcomm.com",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Texas Instruments",
+      "enabled": true,
+      "connector": "oracle_hcm",
+      "host": "edbz.fa.us2.oraclecloud.com",
+      "site": "CX",
+      "id_prefix": "ti",
+      "job_url": "https://careers.ti.com/en/sites/CX/job/{id}",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "Renesas",
+      "enabled": true,
+      "connector": "smartrecruiters",
+      "slug": "RenesasElectronics",
+      "query": "data",
+      "discord_channel_id": null
+    },
+    {
+      "name": "MaxLinear",
+      "enabled": false,
+      "connector": "icims",
+      "subdomain": "careersus-maxlinear",
+      "discord_channel_id": null
+    },
+    {
+      "name": "IBM",
+      "enabled": true,
+      "connector": "ibm",
+      "query": "data",
+      "discord_channel_id": null
     }
   ]
 }

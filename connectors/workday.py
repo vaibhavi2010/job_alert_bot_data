@@ -76,7 +76,10 @@ def fetch(params: dict) -> list[Job]:
         )
         r.raise_for_status()
         data = r.json()
-        total = data.get("total", 0)
+        # Workday only returns a real `total` on the first page; later pages
+        # report 0, so keep the first value or pagination stops after 40 jobs.
+        if total is None:
+            total = data.get("total", 0)
         postings = data.get("jobPostings", [])
         if not postings:
             break

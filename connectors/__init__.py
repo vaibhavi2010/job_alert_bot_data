@@ -1,4 +1,7 @@
-from . import amazon, apple, ashby, goldman_sachs, google, greenhouse, lever, microsoft, tiktok, workday
+from . import (
+    amazon, apple, ashby, eightfold, goldman_sachs, google, greenhouse, ibm, icims,
+    lever, microsoft, oracle_hcm, smartrecruiters, tiktok, workday,
+)
 
 CONNECTORS = {
     "greenhouse": greenhouse.fetch,
@@ -11,4 +14,9 @@ CONNECTORS = {
     "microsoft": microsoft.fetch,
     "tiktok": tiktok.fetch,
     "apple": apple.fetch,
+    "eightfold": eightfold.fetch,
+    "oracle_hcm": oracle_hcm.fetch,
+    "smartrecruiters": smartrecruiters.fetch,
+    "icims": icims.fetch,
+    "ibm": ibm.fetch,
 }

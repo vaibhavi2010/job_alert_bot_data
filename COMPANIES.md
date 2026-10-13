@@ -20,6 +20,21 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 ## TikTok (custom connector)
 - TikTok
 
+## Eightfold (custom connector, `connectors/eightfold.py`)
+- Qualcomm
+
+## Oracle Cloud Recruiting (`connectors/oracle_hcm.py`)
+- Texas Instruments
+
+## SmartRecruiters (`connectors/smartrecruiters.py`)
+- Renesas
+
+## IBM (custom connector, `connectors/ibm.py`)
+- IBM
+
+## iCIMS (`connectors/icims.py`)
+- MaxLinear -- **disabled**: iCIMS' AWS WAF started serving a "Human Verification" bot challenge (HTTP 405) after a few requests. The parser is tested against the real markup but not end-to-end; set `enabled` to true in companies.json and re-run `scripts/test_connectors.py` to see whether the GitHub runner gets through. Not bypassing the challenge.
+
 ## Workday
 - Salesforce
 - Nike
@@ -30,6 +45,15 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 - Adobe
 - Mastercard
 - PayPal
+- Broadcom
+- Nvidia
+- Intel
+- Cadence
+- NXP
+- Analog Devices
+- Micron
+- HP
+- Samsung (whole Samsung Electronics Workday tenant, incl. semiconductor/Austin roles)
 
 ## Greenhouse
 - Stripe
@@ -130,9 +154,11 @@ Companies currently tracked by the job alert bot, grouped by ATS connector. Sour
 
 ---
 
-**Total: 106 companies**
+**Total: 120 companies** (119 enabled)
 
 ---
+
+**Requested but not yet added:** Microchip, MACOM, Western Digital -- no public job board / ATS identified (careers pages blocked or not found).
 
 **Investigated and deliberately not added:**
 - **Tesla** -- careers.tesla.com sits behind Akamai Bot Manager (a live bot-detection challenge cookie, `_abck`, was confirmed on the page). Circumventing that would mean bypassing real bot-detection, which this project won't do. No connector was built.
